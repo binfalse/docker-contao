@@ -105,7 +105,7 @@ This tells Apache to allow everything in any `.htaccess` file in `/var/www`.
 ## LICENSE
 
 	Docker Image for Contao
-	Copyright (C) 2017 Martin Scharm <https://binfalse.de/contact/>
+	Copyright (C) 2018 Martin Scharm <https://binfalse.de/contact/>
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
