@@ -39,32 +39,32 @@ Let's again say your individual data is stored in `$PATH` and you want to run th
 
 	version: '2'
 	services:
-			
-			contao:
-					image: binfalse/contao
-					restart: unless-stopped
-					container_name: contao
-					links:
-							- contao_db
-					ports:
-							- "8080:80"
-					volumes:
-							- $PATH/files:/var/www/html/files
-							- $PATH/templates:/var/www/html/templates:ro
-							- $PATH/system/modules:/var/www/html/system/modules
-							- $PATH/system/config/localconfig.php:/var/www/html/system/config/localconfig.php
-			
-			contao_db:
-					image: mariadb
-					restart: always
-					container_name: contao_db
-					environment:
-							MYSQL_DATABASE: contao_database
-							MYSQL_USER: contao_user
-							MYSQL_PASSWORD: contao_password
-							MYSQL_ROOT_PASSWORD: very_secret
-					volumes:
-							- $PATH/database:/var/lib/mysql
+	    
+	    contao:
+	      image: binfalse/contao
+	      restart: unless-stopped
+	      container_name: contao
+	      links:
+	        - contao_db
+	      ports:
+	        - "8080:80"
+	      volumes:
+	        - $PATH/files:/var/www/html/files
+	        - $PATH/templates:/var/www/html/templates:ro
+	        - $PATH/system/modules:/var/www/html/system/modules
+	        - $PATH/system/config/localconfig.php:/var/www/html/system/config/localconfig.php
+	    
+	    contao_db:
+	      image: mariadb
+	      restart: always
+	      container_name: contao_db
+	      environment:
+	        MYSQL_DATABASE: contao_database
+	        MYSQL_USER: contao_user
+	        MYSQL_PASSWORD: contao_password
+	        MYSQL_ROOT_PASSWORD: very_secret
+	      volumes:
+	        - $PATH/database:/var/lib/mysql
 
 This will create 2 containers:
 
@@ -73,15 +73,15 @@ This will create 2 containers:
 
 To make Contao speak to the MariaDB server you need to configure the database connection in `$PATH/system/config/localconfig.php` just like:
 
-    $GLOBALS['TL_CONFIG']['dbDriver'] = 'MySQLi';
-    $GLOBALS['TL_CONFIG']['dbHost'] = 'contao_db';
-    $GLOBALS['TL_CONFIG']['dbUser'] = 'contao_user';
-    $GLOBALS['TL_CONFIG']['dbPass'] = 'contao_password';
-    $GLOBALS['TL_CONFIG']['dbDatabase'] = 'contao_database';
-    $GLOBALS['TL_CONFIG']['dbPconnect'] = false;
-    $GLOBALS['TL_CONFIG']['dbCharset'] = 'UTF8';
-    $GLOBALS['TL_CONFIG']['dbPort'] = 3306;
-    $GLOBALS['TL_CONFIG']['dbSocket'] = '';
+	$GLOBALS['TL_CONFIG']['dbDriver'] = 'MySQLi';
+	$GLOBALS['TL_CONFIG']['dbHost'] = 'contao_db';
+	$GLOBALS['TL_CONFIG']['dbUser'] = 'contao_user';
+	$GLOBALS['TL_CONFIG']['dbPass'] = 'contao_password';
+	$GLOBALS['TL_CONFIG']['dbDatabase'] = 'contao_database';
+	$GLOBALS['TL_CONFIG']['dbPconnect'] = false;
+	$GLOBALS['TL_CONFIG']['dbCharset'] = 'UTF8';
+	$GLOBALS['TL_CONFIG']['dbPort'] = 3306;
+	$GLOBALS['TL_CONFIG']['dbSocket'] = '';
 
 Here, the database should be accessible at `contao_db:3306`, as it is setup in the compose file above.
 
@@ -104,20 +104,20 @@ This tells Apache to allow everything in any `.htaccess` file in `/var/www`.
 
 ## LICENSE
 
-        Docker Image for Contao
-        Copyright (C) 2017 Martin Scharm <https://binfalse.de/contact/>
-
-        This program is free software: you can redistribute it and/or modify
-        it under the terms of the GNU General Public License as published by
-        the Free Software Foundation, either version 3 of the License, or
-        (at your option) any later version.
-
-        This program is distributed in the hope that it will be useful,
-        but WITHOUT ANY WARRANTY; without even the implied warranty of
-        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-        GNU General Public License for more details.
-
-        You should have received a copy of the GNU General Public License
-        along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	Docker Image for Contao
+	Copyright (C) 2017 Martin Scharm <https://binfalse.de/contact/>
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
