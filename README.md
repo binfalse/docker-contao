@@ -1,6 +1,6 @@
 # Docker image for CONTAO
 
-This [Dockerfile](Dockerfile) compiles into a Docker image for [Contao](https://contao.org/).
+This [Dockerfile](Dockerfile) compiles into a Docker image for the [Contao CMS](https://contao.org/).
 
 ## Usage
 
@@ -101,6 +101,32 @@ Thus, you may for example mount the follwoing file to `/etc/apache2/sites-availa
 	</VirtualHost>
 
 This tells Apache to allow everything in any `.htaccess` file in `/var/www`.
+
+
+### Mail support
+
+This image comes with [sSMTP](https://packages.qa.debian.org/s/ssmtp.html) installed.
+If you need support for email with your Contao installation, you just need to mount two more files into the container:
+
+#### Tell PHP to mail through sSMTP
+
+The following file tells PHP to use the `ssmtp` binary for mailing. Just mount the file to `/usr/local/etc/php/conf.d/mail.ini`:
+
+	[mail function]
+	sendmail_path = "/usr/sbin/ssmtp -t"
+
+
+
+#### Configure sSMTP
+
+The sSMTP configuration is very easy. The following few lines may already be sufficient, when mounted to `/etc/ssmtp/ssmtp.conf`:
+
+	FromLineOverride=YES
+	mailhub=mail.server.tld
+	hostname=php-fpm.yourdomain.tld
+
+For more information read [the documentation in my blog](https://binfalse.de/2016/11/25/mail-support-for-docker-s-php-fpm/) and the [Arch Linux wiki on sSMTP](https://wiki.archlinux.org/index.php/SSMTP) or the [Debian wiki on sSMTP](https://wiki.debian.org/sSMTP).
+
 
 ## LICENSE
 
