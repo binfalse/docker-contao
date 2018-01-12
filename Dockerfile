@@ -23,6 +23,7 @@ RUN wget https://download.contao.org/3.5/zip -O /tmp/contao.zip \
  && unzip /tmp/contao.zip -d /var/www/ \
  && rm -rf /var/www/html /tmp/contao.zip \
  && ln -s /var/www/contao* /var/www/html \
+ && echo 0 > /var/www/html/system/cron/cron.txt \
  && chown -R www-data: /var/www/contao* \
  && a2enmod rewrite
 
