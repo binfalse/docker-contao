@@ -1,6 +1,8 @@
 FROM php:apache
 MAINTAINER martin scharm
 
+# for mail configuration see https://binfalse.de/2016/11/25/mail-support-for-docker-s-php-fpm/
+
 RUN apt-get update \
  && apt-get install -y -q --no-install-recommends \
     wget \
@@ -13,6 +15,7 @@ RUN apt-get update \
     libcurl4-openssl-dev \
     libfreetype6-dev \
     libmcrypt-dev \
+    ssmtp \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/*
 
