@@ -37,4 +37,5 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
  && mkdir -p composer/packages \
  && php composer-setup.php --install-dir=composer \
  && php -r "unlink('composer-setup.php');"
+ && chown -R www-data: composer
 
