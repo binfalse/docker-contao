@@ -15,6 +15,7 @@ RUN apt-get update \
     libcurl4-openssl-dev \
     libfreetype6-dev \
     libmcrypt-dev \
+    libxml2-dev \
     ssmtp \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/*
@@ -29,7 +30,7 @@ RUN wget https://download.contao.org/3.5/zip -O /tmp/contao.zip \
 
 RUN docker-php-source extract \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
- && docker-php-ext-install -j$(nproc) zip gd curl mysqli \
+ && docker-php-ext-install -j$(nproc) zip gd curl mysqli soap \
  && docker-php-source delete
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
