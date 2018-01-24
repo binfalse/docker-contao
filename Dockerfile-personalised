@@ -1,0 +1,14 @@
+FROM binfalse/contao
+MAINTAINER martin scharm <https://binfalse.de/contact/>
+
+COPY composer.json composer/composer.json
+
+USER www-data
+
+# we need to run it this twice... you probably know the error:
+# 'Warning: Contao core 3.5.31 was about to get installed but 3.5.31 has been found in project root, to recover from this problem please restart the operation'
+# not sure why it doesn't run the necessary things itself? seems idiot to me, but... yes.. we run it twice if it fails...
+
+RUN php composer/composer.phar --working-dir=composer update || php composer/composer.phar --working-dir=composer update
+
+USER root
