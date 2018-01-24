@@ -1,33 +1,41 @@
 # Docker image for CONTAO
 
-This [Dockerfile](Dockerfile) compiles into a Docker image for the [Contao CMS](https://contao.org/).
+The [Dockerfile](Dockerfile) compiles into a Docker image for a plain [Contao CMS instance](https://contao.org/).
+The [Dockerfile-personalised](https://github.com/binfalse/docker-contao/blob/master/Dockerfile-personalised) can be used to create an image including all extensions.
 
 ## Usage
 
-The Contao site in the image is fully functional - all you need to do is mounting personalised files "over" the default versions into the image.
+A detailed explanation on how to use the images to run a Contao website is available at [Dockerising a Contao website](https://binfalse.de/2018/01/24/dockerising-a-contao-page/).
+
+The Contao site in the image from the [Dockerfile](Dockerfile) is basically fully functional.
+It contains a plain Contao installation.
+However, it does not contain any plugins yet.
+Thus, you should use the image to create a personalised Docker image locally, which uses your `composer.json` to install extensions etc.
+The file [Dockerfile-personalised](https://github.com/binfalse/docker-contao/blob/master/Dockerfile-personalised) may help as a template.
+
+
+From that personalised image, all you need to do is mounting personalised files "over" the default versions into the image.
 Typically you would mount:
 
 * `files/` - those are your uploaded images etc
 * `templates/` - themes and layout adjustments etc
-* `system/modules/` - extensions you installed
 * `system/config/localconfig.php` - configuration for database etc
 
 plus maybe other configuration files in `system/config/`...
 
 ### Simple Example
 
-Let's say you keep your files in `$PATH`, then you would run your website as:
+Let's say you keep your files in `$PATH` and your personalised Docker image is called `conato-personalised`, then you would run your website as:
 
     docker run --rm -it \
         -p 8080:80 \
         -v $PATH/files/:/var/www/html/files/ \
         -v $PATH/templates/:/var/www/html/templates/ \
-        -v $PATH/system/modules/:/var/www/html/system/modules/ \
         -v $PATH/system/config/localconfig.php:/var/www/html/system/config/localconfig.php \
-        binfalse/conato
+        conato-personalised
 
 This basically mounts your files from `PATH` to the proper locations in `/var/www/html` of the container and bind its port `80` to port `8080` of your server.
-Thus, you should be able to access the contao instance at `example.com:8080`.
+Thus, you should be able to access the Contao instance at `example.com:8080`.
 
 Depending on your configuration you may want to link a MySQL container etc.
 
@@ -41,7 +49,7 @@ Let's again say your individual data is stored in `$PATH` and you want to run th
 	services:
 	    
 	    contao:
-	      image: binfalse/contao
+	      build: /path/to/personalised/Dockerfile
 	      restart: unless-stopped
 	      container_name: contao
 	      links:
@@ -51,7 +59,6 @@ Let's again say your individual data is stored in `$PATH` and you want to run th
 	      volumes:
 	        - $PATH/files:/var/www/html/files
 	        - $PATH/templates:/var/www/html/templates:ro
-	        - $PATH/system/modules:/var/www/html/system/modules
 	        - $PATH/system/config/localconfig.php:/var/www/html/system/config/localconfig.php
 	    
 	    contao_db:
