@@ -18,7 +18,8 @@ RUN apt-get update \
     libxml2-dev \
     ssmtp \
  && apt-get clean \
- && rm -r /var/lib/apt/lists/*
+ && rm -r /var/lib/apt/lists/* \
+ && a2enmod expires headers
 
 RUN wget https://download.contao.org/3.5/zip -O /tmp/contao.zip \
  && unzip /tmp/contao.zip -d /var/www/ \
