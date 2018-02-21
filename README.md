@@ -1,21 +1,15 @@
 # Docker image for CONTAO
 
-The [Dockerfile](Dockerfile) compiles into a Docker image for a plain [Contao CMS instance](https://contao.org/).
-The [Dockerfile-personalised](https://github.com/binfalse/docker-contao/blob/master/Dockerfile-personalised) can be used to create an image including all extensions.
+The [Dockerfile](Dockerfile) compiles into a Docker image for a plain [Contao CMS instance](https://contao.org/). The [Dockerfile-personalised](https://github.com/binfalse/docker-contao/blob/master/Dockerfile-personalised) can be used to create an image including all extensions.
 
 ## Usage
 
 A detailed explanation on how to use the images to run a Contao website is available at [Dockerising a Contao website](https://binfalse.de/2018/01/24/dockerising-a-contao-page/).
 
-The Contao site in the image from the [Dockerfile](Dockerfile) is basically fully functional.
-It contains a plain Contao installation.
-However, it does not contain any plugins yet.
-Thus, you should use the image to create a personalised Docker image locally, which uses your `composer.json` to install extensions etc.
-The file [Dockerfile-personalised](https://github.com/binfalse/docker-contao/blob/master/Dockerfile-personalised) may help as a template.
+The Contao site in the image from the [Dockerfile](Dockerfile) is basically fully functional. It contains a plain Contao installation. However, it does not contain any plugins yet. Thus, you should use the image to create a personalised Docker image locally, which uses your `composer.json` to install extensions etc. The file [Dockerfile-personalised](https://github.com/binfalse/docker-contao/blob/master/Dockerfile-personalised) may help as a template.
 
 
-From that personalised image, all you need to do is mounting personalised files "over" the default versions into the image.
-Typically you would mount:
+From that personalised image, all you need to do is mounting personalised files "over" the default versions into the image. Typically you would mount:
 
 * `files/` - those are your uploaded images etc
 * `templates/` - themes and layout adjustments etc
@@ -34,8 +28,7 @@ Let's say you keep your files in `$PATH` and your personalised Docker image is c
         -v $PATH/system/config/localconfig.php:/var/www/html/system/config/localconfig.php \
         conato-personalised
 
-This basically mounts your files from `PATH` to the proper locations in `/var/www/html` of the container and bind its port `80` to port `8080` of your server.
-Thus, you should be able to access the Contao instance at `example.com:8080`.
+This basically mounts your files from `PATH` to the proper locations in `/var/www/html` of the container and bind its port `80` to port `8080` of your server. Thus, you should be able to access the Contao instance at `example.com:8080`.
 
 Depending on your configuration you may want to link a MySQL container etc.
 
@@ -93,8 +86,7 @@ To make Contao speak to the MariaDB server you need to configure the database co
 Here, the database should be accessible at `contao_db:3306`, as it is setup in the compose file above.
 
 
-If you're running contao with "Rewrite URLs" using an `.htaccess` you also need to update [Apache](https://httpd.apache.org/)'s configuration to allow for rewrites.
-Thus, you may for example mount the follwoing file to `/etc/apache2/sites-available/000-default.conf`:
+If you're running contao with "Rewrite URLs" using an `.htaccess` you also need to update [Apache](https://httpd.apache.org/)'s configuration to allow for rewrites. Thus, you may for example mount the follwoing file to `/etc/apache2/sites-available/000-default.conf`:
 
 	<VirtualHost *:80>
 		ServerAdmin webmaster@localhost
@@ -112,8 +104,7 @@ This tells Apache to allow everything in any `.htaccess` file in `/var/www`.
 
 ### Mail support
 
-This image comes with [sSMTP](https://packages.qa.debian.org/s/ssmtp.html) installed.
-If you need support for email with your Contao installation, you just need to mount two more files into the container:
+This image comes with [sSMTP](https://packages.qa.debian.org/s/ssmtp.html) installed. If you need support for email with your Contao installation, you just need to mount two more files into the container:
 
 #### Tell PHP to mail through sSMTP
 
