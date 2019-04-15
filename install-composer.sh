@@ -11,11 +11,11 @@ then
     exit 1
 fi
 
-mkdir -p composer/packages
+mkdir -p /composer/packages
 
-php composer-setup.php --install-dir=composer
+php -d memory_limit=-1 composer-setup.php --install-dir=/composer
 RESULT=$?
 rm composer-setup.php
-chown -R www-data: composer
+#chown -R www-data: /composer
 
 exit $RESULT

@@ -1,4 +1,4 @@
-FROM php:7.0-apache
+FROM php:7-apache
 MAINTAINER martin scharm <https://binfalse.de/contact/>
 
 # for mail configuration see https://binfalse.de/2016/11/25/mail-support-for-docker-s-php-fpm/
@@ -16,25 +16,20 @@ RUN apt-get update \
     libfreetype6-dev \
     libmcrypt-dev \
     libxml2-dev \
+    libzip-dev \
     ssmtp \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/* \
  && a2enmod expires headers
 
-RUN wget https://download.contao.org/3.5/zip -O /tmp/contao.zip \
- && unzip /tmp/contao.zip -d /var/www/ \
- && rm -rf /var/www/html /tmp/contao.zip \
- && ln -s /var/www/contao* /var/www/html \
- && echo 0 > /var/www/html/system/cron/cron.txt \
- && chown -R www-data: /var/www/contao* \
- && a2enmod rewrite
-
 RUN docker-php-source extract \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
- && docker-php-ext-install -j$(nproc) zip gd curl mysqli soap \
+ && docker-php-ext-install -j$(nproc) zip gd curl mysqli soap intl \
  && docker-php-source delete
 
 ADD install-composer.sh /install-composer.sh
 
 RUN bash /install-composer.sh
+
+RUN php -d memory_limit=-1 /composer/composer.phar create-project contao/managed-edition /var/www/html '4.4.*'
 
