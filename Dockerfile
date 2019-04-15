@@ -30,7 +30,7 @@ RUN docker-php-source extract \
 ADD install-composer.sh /install-composer.sh
 
 RUN bash /install-composer.sh \
- && chown -R www-data: /var/www/html
+ && chown -R www-data: /var/www
 
 USER www-data
 
