@@ -29,8 +29,10 @@ RUN docker-php-source extract \
 
 ADD install-composer.sh /install-composer.sh
 
-RUN bash /install-composer.sh
-
-RUN php -d memory_limit=-1 /composer/composer.phar create-project contao/managed-edition /var/www/html '4.4.*' \
+RUN bash /install-composer.sh \
  && chown -R www-data: /var/www/html
+
+USER www-data
+
+RUN php -d memory_limit=-1 /composer/composer.phar create-project contao/managed-edition /var/www/html '4.4.*'
 
