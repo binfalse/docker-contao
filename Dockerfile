@@ -31,5 +31,6 @@ ADD install-composer.sh /install-composer.sh
 
 RUN bash /install-composer.sh
 
-RUN php -d memory_limit=-1 /composer/composer.phar create-project contao/managed-edition /var/www/html '4.4.*'
+RUN php -d memory_limit=-1 /composer/composer.phar create-project contao/managed-edition /var/www/html '4.4.*' \
+ && chown -R www-data: /var/www/html
 
