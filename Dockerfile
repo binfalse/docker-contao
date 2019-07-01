@@ -20,11 +20,11 @@ RUN apt-get update \
     ssmtp \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/* \
- && a2enmod expires headers
+ && a2enmod expires headers rewrite
 
 RUN docker-php-source extract \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
- && docker-php-ext-install -j$(nproc) zip gd curl mysqli soap intl \
+ && docker-php-ext-install -j$(nproc) zip gd curl pdo pdo_mysql soap intl \
  && docker-php-source delete
 
 ADD install-composer.sh /install-composer.sh
