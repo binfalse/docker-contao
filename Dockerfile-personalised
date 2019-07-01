@@ -1,14 +1,27 @@
-FROM binfalse/contao
+FROM contao4-4-base-2019-05-22:latest
 MAINTAINER martin scharm <https://binfalse.de/contact/>
-
-COPY composer.json composer/composer.json
 
 USER www-data
 
-# we need to run it this twice... you probably know the error:
-# 'Warning: Contao core 3.5.31 was about to get installed but 3.5.31 has been found in project root, to recover from this problem please restart the operation'
-# not sure why it doesn't run the necessary things itself? seems idiot to me, but... yes.. we run it twice if it fails...
+# install required modules, e.g. we're using metamodels
+RUN php -d memory_limit=-1 /composer/composer.phar require metamodels/bundle_all contao-bootstrap/bundle
 
-RUN php composer/composer.phar --working-dir=composer update || php composer/composer.phar --working-dir=composer update
+# clear contao cache to re-read our configuration when a container is spawned
+RUN php -q -d memory_limit=-1 /var/www/html/vendor/contao/manager-bundle/bin/contao-console cache:clear --env=prod --no-warmup
+
+# force-enable SSL
+# we're running behind a reverse proxy ~> connections come through HTTP and contao 4 doesn't respect the proxy headers...
+# best option is apparently to inject the following very early:
+#      $_SERVER["HTTPS"] = 1;
+# see also https://github.com/contao/core-bundle/issues/895#issuecomment-347662604
+RUN sed -i.bak 's%/\*%$_SERVER["HTTPS"] = 1;/*%' /var/www/html/web/app.php && rm /var/www/html/web/app.php.bak
+
+# make files public
+# the root is now in ~/web... so we need to create a link ~/web/files -> ~/files
+RUN mkdir -p /var/www/html/files && ln -s /var/www/html/files /var/www/html/web/files
 
 USER root
+
+VOLUME ["/var/www/html/app/config", "/var/www/html/files", "/var/www/html/templates"]
+
+
