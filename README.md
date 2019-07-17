@@ -1,21 +1,22 @@
 # Docker image for CONTAO
 
-The [Dockerfile](Dockerfile) compiles into a Docker image for a plain [Contao CMS instance](https://contao.org/). The [Dockerfile-personalised](https://github.com/binfalse/docker-contao/blob/master/Dockerfile-personalised) can be used to create an image including all extensions.
+The [Dockerfile](Dockerfile) compiles into a Docker image for a plain [Contao 4 CMS instance](https://contao.org/). The [Dockerfile-personalised](https://github.com/binfalse/docker-contao/blob/master/Dockerfile-personalised) can be used to create an image including individual extensions and settings.
 
 ## Usage
 
-A detailed explanation on how to use the images to run a Contao website is available at [Dockerising a Contao website](https://binfalse.de/2018/01/24/dockerising-a-contao-page/).
+A detailed explanation on how to use the images to run a Contao website is available at [Dockerising Contao 4](https://binfalse.de/2019/07/17/dockerising-contao-4/).
 
-The Contao site in the image from the [Dockerfile](Dockerfile) is basically fully functional. It contains a plain Contao installation. However, it does not contain any plugins yet. Thus, you should use the image to create a personalised Docker image locally, which uses your `composer.json` to install extensions etc. The file [Dockerfile-personalised](https://github.com/binfalse/docker-contao/blob/master/Dockerfile-personalised) may help as a template.
+The Contao site in the image from the [Dockerfile](https://github.com/binfalse/docker-contao/blob/master/Dockerfile) is basically fully functional. It contains a plain Contao installation. However, it does not contain any plugins yet. Thus, you should use the image to create a personalised Docker image locallyr., The file [Dockerfile-personalised](https://github.com/binfalse/docker-contao/blob/master/Dockerfile-personalised) may help as a template.
 
 
 From that personalised image, all you need to do is mounting personalised files "over" the default versions into the image. Typically you would mount:
 
 * `files/` - those are your uploaded images etc
 * `templates/` - themes and layout adjustments etc
-* `system/config/localconfig.php` - configuration for database etc
+* `system/config/*.php` - configuration for Contao
+* `app/config/*.yml` - configuration for Symfony
 
-plus maybe other configuration files in `system/config/`...
+plus maybe other configuration files in `system/config/` and `app/config/`...
 
 ### Simple Example
 
@@ -26,6 +27,7 @@ Let's say you keep your files in `$PATH` and your personalised Docker image is c
         -v $PATH/files/:/var/www/html/files/ \
         -v $PATH/templates/:/var/www/html/templates/ \
         -v $PATH/system/config/localconfig.php:/var/www/html/system/config/localconfig.php \
+        -v $PATH/app/config/parameters.yml:/var/www/html/app/config/parameters.yml \
         conato-personalised
 
 This basically mounts your files from `PATH` to the proper locations in `/var/www/html` of the container and bind its port `80` to port `8080` of your server. Thus, you should be able to access the Contao instance at `example.com:8080`.
@@ -53,6 +55,7 @@ Let's again say your individual data is stored in `$PATH` and you want to run th
 	        - $PATH/files:/var/www/html/files
 	        - $PATH/templates:/var/www/html/templates:ro
 	        - $PATH/system/config/localconfig.php:/var/www/html/system/config/localconfig.php
+	        - $PATH/app/config/parameters.yml:/var/www/html/app/config/parameters.yml
 	    
 	    contao_db:
 	      image: mariadb
@@ -71,17 +74,16 @@ This will create 2 containers:
 * `contao` based on this image, all user-based files are mounted into the proper locations
 * `contao_db` a [MariaDB](https://hub.docker.com/_/mariadb/) to provide a MySQL server
 
-To make Contao speak to the MariaDB server you need to configure the database connection in `$PATH/system/config/localconfig.php` just like:
+To make Contao speak to the MariaDB server you need to configure the database connection in `$PATH/app/config/parameters.yml` just like:
 
-	$GLOBALS['TL_CONFIG']['dbDriver'] = 'MySQLi';
-	$GLOBALS['TL_CONFIG']['dbHost'] = 'contao_db';
-	$GLOBALS['TL_CONFIG']['dbUser'] = 'contao_user';
-	$GLOBALS['TL_CONFIG']['dbPass'] = 'contao_password';
-	$GLOBALS['TL_CONFIG']['dbDatabase'] = 'contao_database';
-	$GLOBALS['TL_CONFIG']['dbPconnect'] = false;
-	$GLOBALS['TL_CONFIG']['dbCharset'] = 'UTF8';
-	$GLOBALS['TL_CONFIG']['dbPort'] = 3306;
-	$GLOBALS['TL_CONFIG']['dbSocket'] = '';
+    parameters:
+        database_host: contao_db
+        database_port: 3306
+        database_user: contao_user
+        database_password: contao_password
+        database_name: contao_database
+        secret: XXXXXXXXRANDOMXXXXXXXX
+
 
 Here, the database should be accessible at `contao_db:3306`, as it is setup in the compose file above.
 
@@ -129,7 +131,7 @@ For more information read [the documentation in my blog](https://binfalse.de/201
 ## LICENSE
 
 	Docker Image for Contao
-	Copyright (C) 2018 Martin Scharm <https://binfalse.de/contact/>
+	Copyright (C) 2019 Martin Scharm <https://binfalse.de/contact/>
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
