@@ -18,7 +18,7 @@ RUN apt-get update \
     libmcrypt-dev \
     libxml2-dev \
     libzip-dev \
-    ssmtp \
+    msmtp \
  && apt-get clean \
  && rm -r /var/lib/apt/lists/* \
  && a2enmod expires headers rewrite
